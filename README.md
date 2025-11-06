@@ -23,6 +23,5 @@ It provides **instant access to official KSA documentation**, including:
 | **Mobile-Friendly** | Responsive design with mobile menu |
 | **Rate Limited** | 5 requests/min per IP (under Gemini limits) |
 | **Secure** | API key in `.env` (never in frontend) |
-| **No Proxy Bloat** | Direct PHP → Gemini call |
 
 ---
