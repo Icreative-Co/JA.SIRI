@@ -20,7 +20,6 @@ const topicBtns      = document.querySelectorAll('.topic-button');
 const scrollBtn      = document.getElementById('scroll-bottom');
 
 /* ====================== GEMINI CONFIG ====================== */
-//const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyCvwtdNB0wEY1jqBo2LlmXIPJQZ1quUCfI`;
 
 let currentLang = 'en'; // 'en' or 'sw'
 
