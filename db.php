@@ -1,25 +1,59 @@
 <?php
-// db.php – MySQL version with products
-$host = 'localhost';
-$db   = 'ksa_lipa';
-$user = 'root';
-$pass = '';  // Your MySQL password
-$charset = 'utf8mb4';
+// db.php – MySQL connection using environment variables (suitable for Render / Aiven)
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+// Helper: load env from real env vars first, fallback to .env file if present
+function env($key, $default = null) {
+    $val = getenv($key);
+    if ($val !== false) return $val;
+    $ini = @parse_ini_file('.env');
+    if ($ini && array_key_exists($key, $ini)) return $ini[$key];
+    return $default;
+}
+
+// If a DATABASE_URL is provided (mysql://user:pass@host:port/dbname), parse it
+$databaseUrl = env('DATABASE_URL');
+$host = env('DB_HOST', 'localhost');
+$port = env('DB_PORT', '3306');
+$db   = env('DB_NAME', 'ksa_lipa');
+$user = env('DB_USER', 'root');
+$pass = env('DB_PASS', '');
+$charset = 'utf8mb4';
+$db_ssl_mode = env('DB_SSL_MODE', '');
+$db_ssl_ca = env('DB_SSL_CA_PATH', '');
+
+if ($databaseUrl) {
+    $parts = parse_url($databaseUrl);
+    if ($parts !== false) {
+        if (!empty($parts['host'])) $host = $parts['host'];
+        if (!empty($parts['port'])) $port = $parts['port'];
+        if (!empty($parts['path'])) $db = ltrim($parts['path'], '/');
+        if (!empty($parts['user'])) $user = $parts['user'];
+        if (!empty($parts['pass'])) $pass = $parts['pass'];
+    }
+}
+
+// Build DSN using TCP host and port (avoid socket lookup on localhost)
+$dsn = "mysql:host={$host};port={$port};dbname={$db};charset={$charset}";
+
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
 ];
+
+// If SSL CA path is provided and PDO constant exists, set SSL CA option
+if (!empty($db_ssl_ca) && defined('PDO::MYSQL_ATTR_SSL_CA')) {
+    $options[PDO::MYSQL_ATTR_SSL_CA] = $db_ssl_ca;
+}
 
 try {
     $db = new PDO($dsn, $user, $pass, $options);
 } catch (PDOException $e) {
-    // Log full error details to file for debugging, but don't expose to user
+    // Log full error details for debugging (Render logs capture this)
     error_log("Database connection failed: " . $e->getMessage());
-    // Show generic message to user
+    // Show generic message to user and include the connection hint
     http_response_code(500);
-    die("Database connection failed. Please contact support.");
+    die("Database connection failed. Please contact support.\nService URI\n    " . ($databaseUrl ?: "mysql://{$user}:****@{$host}:{$port}/{$db}"));
 }
 
 // Customers & Payments (existing)
