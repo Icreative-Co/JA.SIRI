@@ -1,0 +1,18 @@
+/* site.css - centralized styles for KSA Store */
+:root{
+  --ksa-green:#006400;
+  --ksa-yellow:#FFD700;
+  --ksa-green-700:#166534;
+}
+body{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; color:#1f2937; background:#f8fafc}
+.navbar{background:var(--ksa-green);}
+.navbar a{color:#fff}
+.container{max-width:1200px;margin:0 auto;padding:0 1rem}
+.hero{background:linear-gradient(rgba(0,100,0,0.85), rgba(0,100,0,0.9)), url('../img/hero.jpg') center/cover no-repeat; min-height:60vh}
+.float-btn{position:fixed;right:30px;bottom:30px;background:var(--ksa-green);color:#fff;width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;z-index:9998;border:5px solid var(--ksa-yellow);box-shadow:0 10px 30px rgba(0,100,0,0.6);cursor:pointer}
+.float-btn:hover{transform:scale(1.05)}
+.btn-primary{background:var(--ksa-green);color:#fff;padding:.75rem 1.25rem;border-radius:9999px;text-decoration:none;display:inline-block}
+.footer{background:#111827;color:#d1d5db;padding:3rem 0;text-align:center}
+.card{background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.06);padding:1.25rem}
+/* responsive helper */
+@media (max-width:768px){.hidden-md{display:none!important}} 

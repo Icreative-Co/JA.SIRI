@@ -1,0 +1,235 @@
+{
+  "ksa_organization": {
+    "name": "Kenya Scouts Association",
+    "headquarters": "Rowallan Camp, Nairobi",
+    "founded": 1910,
+    "years_strong": "110+ years",
+    "reach": {
+      "counties": 47,
+      "youth_served": "500,000+",
+      "commitment": "100%"
+    },
+    "contact": {
+      "phone": ["020 2020819", "570794", "568111"],
+      "fax": "573799",
+      "email": "kenscout@africaonline.co.ke",
+      "po_box": "P.O. BOX 41422, Nairobi"
+    },
+    "chief_commissioner": "Hon. Julius Ole Sunkuli EGH, EBS, MP",
+    "national_executive_commissioner": "Philip Kiprono Ngetich"
+  },
+
+  "ksa_mission": {
+    "primary_goal": "Develop character and provide young people with skills to be better people and better citizens",
+    "three_principles": [
+      "Service to God",
+      "Service to country and to others",
+      "Service to self through good character"
+    ],
+    "philosophy": "Scouting is the world's largest single voluntary youth movement dedicated to building character",
+    "kenyanization": "Scouting adapted to Kenyan culture, national goals and aspirations"
+  },
+
+  "ksa_founder": {
+    "name": "Lord Baden-Powell",
+    "birth_date": "February 22, 1857",
+    "birth_place": "England",
+    "military_service": "British Army - India and South Africa",
+    "key_achievement": "Siege of Mafeking - survived 7 months without losing troops",
+    "publications": [
+      "Aids to Scouting (1899)",
+      "Scouting For Boys (1908)"
+    ],
+    "zulu_name": "Impesa - the wolf that does not sleep",
+    "connection_to_kenya": {
+      "first_visit": 1906,
+      "second_visit": 1935,
+      "settled": 1938,
+      "home_name": "PAXTU (in Nyeri)",
+      "death": "January 8, 1941",
+      "burial": "St. Peter's Church, Nyeri"
+    },
+    "founder_day": "February 22 (shared with wife Lady Baden-Powell - Thinking Day for Girl Guides)"
+  },
+
+  "scout_sections_kenya": {
+    "sungura": {
+      "name": "Sungura Scouts",
+      "age_group": "6-10 years",
+      "stages": ["Nyota I", "Nyota II", "Nyota III"],
+      "investiture": "Pre-Investiture and Investiture ceremony required",
+      "link_badge": "Going Up Ceremony to next section",
+      "promise": "Sungura Scout Promise (age-appropriate)",
+      "standard_badges": [
+        "Nyota I - basic foundation",
+        "Nyota II - intermediate skills",
+        "Nyota III - advanced skills",
+        "Link Badge - transition to Chipukizi"
+      ],
+      "proficiency_badges": [
+        "Animal Husbandry", "Artist", "Athlete", "Child Health", "Collector",
+        "Computerist", "Conservation", "Cyclist", "Drug Abuse Prevention",
+        "Elimu", "Entertainer", "First Aider", "Fisherman", "Guide",
+        "Handicraft", "Handyman", "House Orderly", "Linguist", "Mkulima",
+        "Musician", "Mwanainchi", "Observer", "Photographer",
+        "Reproductive Health Education", "Signaller", "Sportsman",
+        "Swimmer", "Utamaduni"
+      ]
+    },
+
+    "chipukizi": {
+      "name": "Chipukizi Scouts",
+      "age_group": "10-14 years",
+      "stages": ["Zizi", "Shina", "Tawi"],
+      "investiture": "Pre-Investiture and Investiture ceremony required",
+      "scout_cord": "Awarded on completion of stages",
+      "chui_badge": "Special achievement badge",
+      "promise": "Chipukizi Scout Promise",
+      "standard_badges": [
+        "Zizi - foundation stage",
+        "Shina - intermediate stage",
+        "Tawi - advanced stage"
+      ],
+      "proficiency_badges": [
+        "Africa Friendship", "Afya", "Aid-To-The-Handicapped", "Air Apprentice",
+        "Aircraft Modeller", "Air Spotter", "Animal Husbandry", "Astronomer",
+        "Athlete", "Backwoodsman", "Basket Maker", "Boatswain", "Bookbinder",
+        "Camper", "Canoeist", "Citizenship", "Communicator", "Computerist",
+        "Conservation", "Cook", "Drug Abuse Prevention", "Explorer",
+        "Fire Fighter", "First Aider", "Fisherman", "Home Nursing",
+        "Jobman", "Joiner", "Leather Worker", "Lifesaver", "Meteorologist",
+        "Musician", "Naturalist", "Oarsman", "Observer", "Photographer",
+        "Pioneer", "Printer", "Public Speaker", "Radio Mechanic", "Reader",
+        "Reproductive Health Education", "Rope Maker", "Sailor", "Scribe",
+        "Signaller", "Sportsman", "Stamp Collector", "Swimmer", "Tracker",
+        "Utamaduni", "Worker", "Young Farmer"
+      ]
+    },
+
+    "mwamba": {
+      "name": "Mwamba Scouts",
+      "age_group": "14-18 years",
+      "stages": ["Mwanzo", "Mwangaza", "Kilele"],
+      "investiture": "Pre-Investiture stage required",
+      "promise": "Mwamba Scout Promise",
+      "special_badges": [
+        "Bushman's Thong - outdoor mastery",
+        "Airman's Badge - aviation skills",
+        "Seaman's Badge - water skills",
+        "Simba Badge - leadership courage"
+      ],
+      "proficiency_badges": [
+        "Africa Friendship", "Aid to the Handicapped", "Aircraft Modeller",
+        "Air Mechanic", "Air Navigator", "Air Spotter", "Animal Husbandry",
+        "Archaeologist", "Artist", "Astronomer", "Athlete", "Boatswain",
+        "Book Fan", "Camper", "Citizenship", "Computerist", "Cook",
+        "Conservation", "Drug Abuse Prevention", "Electrician", "Explorer",
+        "Firefighter", "First Aider", "Fisherman", "Forester", "Gardener",
+        "Handicraft", "Helmsman", "Hiker", "Interpreter", "Jobman",
+        "Lifesaver", "Map Maker", "Mechanic", "Messenger", "Meteorologist",
+        "Mkulima", "Mountaineer", "Musician", "Mzalendo", "Naturalist",
+        "Photographer", "Pioneer", "Public Health", "Public Speaker",
+        "Quartermaster", "Radio Mechanic", "Reproductive Health Education",
+        "Rock Climber", "Signaler", "Stamp Collector", "Storage Expert",
+        "Swimmer", "Tracker", "Traditional Medicine", "Venturer",
+        "World Friendship"
+      ]
+    },
+
+    "jasiri": {
+      "name": "Jasiri Scouts",
+      "age_group": "18+ years (Adult/Leaders)",
+      "focus": "Leadership development and mentoring",
+      "promise": "Jasiri Scout Promise",
+      "awards_and_badges": [
+        "Jasiri Afya - Health",
+        "Chief Commissioner's Challenge Badge (C.C.C) - Leadership challenge",
+        "Chief Scout Award (CSA) - Highest honor",
+        "Jasiri Conservation - Environmental leadership",
+        "Jasiri Drug Abuse Prevention - Health advocacy",
+        "Jasiri First Aider - Emergency response",
+        "Jasiri Instructor - Teaching skills",
+        "Jasiri Lifesaver - Water rescue",
+        "Jasiri Mkulima - Agricultural leadership",
+        "Jasiri Mountain Rescue - Outdoor rescue",
+        "Jasiri Mwalimu - Education leadership",
+        "Jasiri Mzalendo - Citizenship/Patriotism",
+        "Project Badge - Community projects",
+        "Jasiri Reproductive Health Education - Health education",
+        "Jasiri Scoutcraft Star - Scouting excellence",
+        "Jasiri Spirit - Character/Values",
+        "Jasiri Sportsman - Athletic excellence",
+        "Jasiri Utamaduni - Cultural preservation"
+      ]
+    }
+  },
+
+  "scout_promise_and_law": {
+    "core_principles": [
+      "Service to God",
+      "Service to country and to others",
+      "Development of good character",
+      "Building skills for better citizenship"
+    ],
+    "scout_method": "Learning by doing, age-appropriate challenges, outdoor activities",
+    "integration_policy": "Equal participation for all - girls, boys, and differently-abled scouts"
+  },
+
+  "shop_products": {
+    "note": "KSA Scouts Shop - Price List Effective 1st January 2025",
+    "categories": {
+      "uniforms": "Scout uniforms for all sections with official badges",
+      "badges": "Standard badges, proficiency badges, and special achievement badges",
+      "training_materials": "Handbooks, training guides, and educational resources",
+      "camping_gear": "Tents, sleeping bags, and outdoor equipment",
+      "accessories": "Scarves, neckerchiefs, belts, and uniform accessories"
+    }
+  },
+
+  "training_and_development": {
+    "wood_badge": "Advanced leadership training for Scout Leaders",
+    "investiture_process": "Formal ceremony marking entry into each Scout section",
+    "badge_requirements": "Tests designed to suit age and ability of each section",
+    "programme_philosophy": "Supplemented by Scout literature and Leader creativity",
+    "adaptations": "Severely handicapped scouts may need modified requirements - contact HQ"
+  },
+
+  "supporting_organizations": {
+    "funders": [
+      "United Nations International Drug Control Programme (UNDCP)",
+      "United Nations Population Fund (UNFPA)",
+      "National Agency for Campaign Against Drug Abuse (NACADA)",
+      "Programme for Appropriate Technology in Health (PATH)",
+      "World Scout Bureau/Africa Regional Office"
+    ]
+  },
+
+  "ksa_impact_areas": [
+    "Youth character development",
+    "Leadership skills",
+    "Drug abuse prevention",
+    "Reproductive health education",
+    "Environmental conservation",
+    "Community service",
+    "Cultural preservation (Utamaduni)",
+    "Citizenship and national unity",
+    "Skills training across 70+ proficiency areas"
+  ],
+
+  "contact_information": {
+    "address": "Rowallan Camp, Nairobi",
+    "po_box": "P.O. Box 41422, Nairobi",
+    "phone": "020 2020819, 570794, 568111",
+    "fax": "573799",
+    "email": "kenscout@africaonline.co.ke",
+    "website": "www.kenyascouts.org"
+  },
+
+  "ai_assistant_guidelines": {
+    "purpose": "Help visitors understand KSA programs, shop products, badge requirements, and scout opportunities",
+    "tone": "Friendly, informative, encouraging",
+    "language": "Use both English and Swahili where appropriate (e.g., 'Kuwa Tayari' = 'Be Prepared')",
+    "scope": "Products, programs, contact info, history, values, and scout development",
+    "limitations": "Refer complex administrative questions to HQ email or phone"
+  }
+}

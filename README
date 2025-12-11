@@ -1,0 +1,9 @@
+KSA Lipa Mdogo Mdogo - Quick Setup
+
+1. Edit .env with your real M-Pesa credentials
+2. For testing: use ENV=sandbox + test phone 254708374149
+3. Upload all files to your hosting
+4. Visit index.php → it works!
+5. When ready, change ENV=live and use real credentials
+
+That's it! You're collecting installments today.

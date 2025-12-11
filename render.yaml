@@ -1,0 +1,42 @@
+# Render.yaml template for deploying the PHP site on Render
+# Replace environment variable values in the Render dashboard (do NOT commit secrets here)
+
+services:
+  - type: web
+    name: ksa-lipa-mdogo
+    env: docker
+    plan: free
+    # Build and start use a small Dockerfile to run PHP. Alternatively set env to "static" if static-only.
+    dockerfilePath: Dockerfile
+    branch: main
+    autoDeploy: true
+    envVars:
+      - key: GEMINI_API_KEY
+        scope: env
+      - key: MPESA_CONSUMER_KEY
+        scope: env
+      - key: MPESA_CONSUMER_SECRET
+        scope: env
+      - key: MPESA_PASSKEY
+        scope: env
+      - key: MPESA_SHORTCODE
+        scope: env
+      - key: DATABASE_URL
+        scope: env
+      - key: DB_HOST
+        scope: env
+      - key: DB_PORT
+        scope: env
+      - key: DB_NAME
+        scope: env
+      - key: DB_USER
+        scope: env
+      - key: DB_PASS
+        scope: env
+      - key: DB_SSL_MODE
+        scope: env
+
+# Notes:
+# - Add secrets and sensitive env vars through Render's dashboard or CLI, not in this file.
+# - The repository should include a Dockerfile that starts PHP-FPM or the PHP built-in server.
+# - Set up health checks and a start command in the Dockerfile or via Render settings.

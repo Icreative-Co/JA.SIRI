@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kenya Scouts AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="assets/css/index.css">
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <style>
+        body { margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        #chat-messages { flex: 1; overflow-y: auto; padding: 1rem; background: #f8fff8; }
+        .message { max-width: 85%; margin: 0.5rem 0; padding: 0.75rem 1rem; border-radius: 1rem; line-height: 1.6; }
+        .user { background: #006400; color: white; align-self: flex-end; border-bottom-right-radius: 0; }
+        .ai { background: white; color: #333; border: 1px solid #d4edda; align-self: flex-start; border-bottom-left-radius: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .typing { font-style: italic; color: #666; opacity: 0.8; }
+        .scrollbar::-webkit-scrollbar { width: 6px; }
+        .scrollbar::-webkit-scrollbar-thumb { background: #006400; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-[#f7faf8] font-sans flex flex-col scrollbar">
+
+<!-- HEADER -->
+<header class="bg-gradient-to-r from-green-800 to-green-600 text-white p-4 shadow-md border-b-4 border-yellow-400">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <img src="assets/img/ksa_logo.png" alt="Kenya Scouts Logo" class="h-10 w-10 rounded-full border-2 border-yellow-400">
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">Kenya Scouts AI Assistant</h1>
+                <p class="text-xs opacity-80 italic">All official KSA documentation at your fingertips</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="export-chat" class="p-2 rounded-full hover:bg-green-700 transition" title="Download chat">
+                <i class="fas fa-download text-yellow-300 text-xl"></i>
+            </button>
+            <button id="lang-toggle" class="p-2 rounded-full hover:bg-green-700 transition" title="Toggle Language">
+                <span class="flag-icon font-bold">EN</span>
+            </button>
+            <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-full hover:bg-green-700 transition">
+                <i class="fas fa-bars text-yellow-300 text-xl"></i>
+            </button>
+            <button id="info-button" class="p-2 rounded-full hover:bg-green-700 transition">
+                <i class="fas fa-info-circle text-yellow-300 text-xl"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN -->
+<main class="flex-1 container mx-auto p-4 flex flex-col md:flex-row gap-4 overflow-hidden">
+    <!-- LEFT SIDEBAR -->
+    <aside id="desktop-sidebar" class="md:w-1/4 bg-white p-4 rounded-xl shadow-md border-l-4 border-green-700 hidden md:block">
+        <h2 class="font-bold text-lg mb-3 text-green-800">Key Topics</h2>
+        <ul class="space-y-2">
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition" data-en="History of Scouting in Kenya" data-sw="Historia ya Skauti Kenya"><i class="fas fa-history text-green-700 mr-2"></i> History of Scouting in Kenya</button></li>
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition" data-en="Scout Promise & Law" data-sw="Ahadi na Sheria ya Skauti"><i class="fas fa-handshake text-green-700 mr-2"></i> Scout Promise &amp; Law</button></li>
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition" data-en="Sections & Programs" data-sw="Sehemu na Programu"><i class="fas fa-users text-green-700 mr-2"></i> Sections &amp; Programs</button></li>
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition" data-en="Badges & Awards" data-sw="Beji na Tuzo"><i class="fas fa-award text-green-700 mr-2"></i> Badges &amp; Awards</button></li>
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition" data-en="Activities & Camps" data-sw="Shughuli na Kambi"><i class="fas fa-campground text-green-700 mr-2"></i> Activities &amp; Camps</button></li>
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition" data-en="Leadership Training" data-sw="Mafunzo ya Uongozi"><i class="fas fa-chalkboard-teacher text-green-700 mr-2"></i> Leadership Training</button></li>
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition" data-en="Community Service" data-sw="Huduma za Jamii"><i class="fas fa-hands-helping text-green-700 mr-2"></i> Community Service</button></li>
+        </ul>
+        <h2 class="font-bold text-lg mt-6 mb-3 text-green-800">Resources</h2>
+        <ul class="space-y-2">
+            <li><button class="w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition"><i class="fas fa-book text-green-700 mr-2"></i> Handbooks</button></li>
+            <li><button class="w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition"><i class="fas fa-phone text-green-700 mr-2"></i> Contact</button></li>
+            <li><a href="https://kenyascouts.org" target="_blank" class="w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition"><i class="fas fa-globe text-green-700 mr-2"></i> Official Site</a></li>
+            <li><a href="shop.php" class="w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition text-blue-600"><i class="fas fa-shopping-cart text-green-700 mr-2"></i> Shop Inventory</a></li>
+        </ul>
+    </aside>
+
+    <!-- CHAT AREA -->
+    <section class="flex-1 flex flex-col bg-white rounded-xl shadow-md border-t-4 border-green-700 overflow-hidden">
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto scrollbar">
+            <div class="message ai">
+                <strong>Hello Scout!</strong><br>
+                I'm your official Kenya Scouts AI Assistant. Ask me anything about Scouting in Kenya — history, Promise, badges, camps, or programs.
+            </div>
+        </div>
+
+        <!-- Quick suggestions -->
+        <div class="px-4 py-2 border-t border-gray-200 bg-green-50">
+            <div class="flex flex-wrap gap-2">
+                <button class="suggestion-button bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition" data-en="What is the Scout Promise?" data-sw="Ahadi ya Skauti ni nini?">What is the Scout Promise?</button>
+                <button class="suggestion-button bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition" data-en="History of Kenya Scouts" data-sw="Historia ya Skauti Kenya">History of Kenya Scouts</button>
+                <button class="suggestion-button bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition" data-en="How to earn badges" data-sw="Jinsi ya kupata beji">How to earn badges</button>
+                <button class="suggestion-button bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm hover:bg-green-200 transition" data-en="Upcoming camps" data-sw="Kambi zijazo">Upcoming camps</button>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="p-4 border-t border-gray-200 bg-gray-50">
+            <form id="chat-form" class="flex items-center gap-2">
+                <input id="user-input" type="text" placeholder="Ask anything about Kenya Scouts…" class="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600" autocomplete="off" required>
+                <button type="button" class="bg-yellow-500 text-white p-3 rounded-lg hover:bg-yellow-600 transition" title="Speak">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button type="submit" class="bg-green-700 text-white p-3 rounded-lg hover:bg-green-800 transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="md:w-1/4 bg-white p-4 rounded-xl shadow-md border-r-4 border-green-700 hidden lg:block">
+        <h2 class="font-bold text-lg mb-3 text-green-800">About KSA</h2>
+        <p class="text-gray-700 mb-4">Founded in 1910, the Kenya Scouts Association follows Baden-Powell’s principles to develop responsible, skilled citizens.</p>
+        <h3 class="font-bold text-md mb-2 text-green-800">Core Elements</h3>
+        <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
+            <li>Scout Promise & Law</li>
+            <li>Progressive Badge System</li>
+            <li>Outdoor Adventures</li>
+            <li>Community Service</li>
+            <li>Leadership Development</li>
+        </ul>
+        <div class="mt-6 p-3 bg-green-50 rounded-lg border-l-4 border-yellow-400">
+            <h3 class="font-bold text-md mb-2 text-green-800">Need Help?</h3>
+            <p class="text-sm text-gray-700">Reach your local Scout leader or visit <a href="https://kenyascouts.org" class="underline">kenyascouts.org</a>.</p>
+        </div>
+    </aside>
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-green-800 text-yellow-300 text-center p-3 text-sm border-t-2 border-yellow-400">
+    © 2025 Kenya Scouts AI Assistant | Kenya Scouts Association
+</footer>
+
+<!-- MOBILE MENU & INFO MODAL (same as before) -->
+<div id="mobile-menu" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl w-full max-w-md p-6 relative overflow-y-auto max-h-full">
+        <button id="close-mobile-menu" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+        <!-- Same content as desktop sidebar -->
+        <h2 class="font-bold text-lg mb-3 text-green-800">Key Topics</h2>
+        <ul class="space-y-2">
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition"><i class="fas fa-history text-green-700 mr-2"></i> History of Scouting in Kenya</button></li>
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition"><i class="fas fa-handshake text-green-700 mr-2"></i> Scout Promise &amp; Law</button></li>
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition"><i class="fas fa-users text-green-700 mr-2"></i> Sections &amp; Programs</button></li>
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition"><i class="fas fa-award text-green-700 mr-2"></i> Badges &amp; Awards</button></li>
+            <li><button class="topic-button w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition"><i class="fas fa-campground text-green-700 mr-2"></i> Activities &amp; Camps</button></li>
+            <li><a href="shop.php" class="w-full text-left p-2 rounded hover:bg-green-50 flex items-center transition text-blue-600"><i class="fas fa-shopping-cart text-green-700 mr-2"></i> Shop Inventory</a></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const messagesDiv = document.getElementById('chat-messages');
+    const input = document.getElementById('user-input');
+
+    function addMessage(text, type = 'ai') {
+        const div = document.createElement('div');
+        div.className = `message ${type}`;
+        div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        messagesDiv.appendChild(div);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    async function sendMessage(prompt = null) {
+        const text = prompt || input.value.trim();
+        if (!text) return;
+
+        addMessage(text, 'user');
+        if (!prompt) input.value = '';
+
+        const typing = document.createElement('div');
+        typing.className = 'message ai typing';
+        typing.textContent = 'Thinking...';
+        messagesDiv.appendChild(typing);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+        try {
+            const res = await fetch('api/chat.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: text })
+            });
+            const data = await res.json();
+
+            typing.remove();
+            if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+                addMessage(data.candidates[0].content.parts[0].text);
+            } else {
+                addMessage(data.error || "Sorry, I couldn't respond. Try again.");
+            }
+        } catch (err) {
+            typing.remove();
+            addMessage("Connection error. Is api/chat.php working?");
+        }
+    }
+
+    document.getElementById('chat-form').onsubmit = (e) => { e.preventDefault(); sendMessage(); };
+    document.querySelectorAll('.suggestion-button, .topic-button').forEach(btn => {
+        btn.onclick = () => sendMessage(btn.getAttribute('data-en') || btn.textContent.trim());
+    });
+
+    // Mobile menu toggle
+    document.getElementById('mobile-menu-toggle').onclick = () => {
+        document.getElementById('mobile-menu').classList.remove('hidden');
+    };
+    document.getElementById('close-mobile-menu').onclick = () => {
+        document.getElementById('mobile-menu').classList.add('hidden');
+    };
+
+    // Export chat
+    document.getElementById('export-chat').onclick = () => {
+        const text = Array.from(document.querySelectorAll('#chat-messages .message'))
+            .map(m => (m.classList.contains('user') ? 'You: ' : 'AI: ') + m.textContent)
+            .join('\n\n');
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'ksa-chat.txt'; a.click();
+    };
+
+    // Info modal
+    document.getElementById('info-button').onclick = () => alert("Kenya Scouts AI Assistant — Powered by official KSA data from kenyascouts.org");
+</script>
+
+</body>
+</html>
