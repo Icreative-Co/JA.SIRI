@@ -5,18 +5,14 @@ ob_start();
 $root = dirname(__DIR__);
 $envFile = $root . '/.env';
 
-if (!file_exists($envFile)) {
-    http_response_code(500);
-    header('Content-Type: application/json');
-    echo json_encode(['error' => '.env file missing!']);
-    exit;
-}
-
-foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-    if (strpos(trim($line), '#') === 0) continue;
-    if (strpos($line, '=') !== false) {
-        [$key, $value] = array_map('trim', explode('=', $line, 2));
-        putenv("$key=$value");
+// Load .env if present, but do not fail when it is missing (Render uses environment variables)
+if (file_exists($envFile)) {
+    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        if (strpos($line, '=') !== false) {
+            [$k, $v] = array_map('trim', explode('=', $line, 2));
+            putenv("$k=$v");
+        }
     }
 }
 
@@ -66,6 +62,9 @@ $contextParts[] = "Scout Sections: Sungura (6-10), Chipukizi (10-14), Mwamba (14
 $contextParts[] = "Shop Items: Uniforms (3600-4000 KES), Badges, Training Materials, Camping Gear";
 $contextParts[] = "Delivery: Free pickup at Rowallan Camp or nationwide via G4S (300-600 KES)";
 $contextParts[] = "Mission: Develop character and leadership through the Scout method";
+
+// Compose a short relevant context string used in prompts (avoid undefined variable)
+$relevantContext = implode("\n", $contextParts);
 
 $ksaData = json_encode([
     "Organization" => "Kenya Scouts Association, founded 1910. Operating in 47 counties, serving 500,000+ youth.",
