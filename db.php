@@ -21,6 +21,16 @@ $charset = 'utf8mb4';
 $db_ssl_mode = env('DB_SSL_MODE', '');
 $db_ssl_ca = env('DB_SSL_CA_PATH', '');
 
+// If the CA certificate is provided as an environment variable (DB_SSL_CERT),
+// write it to a temporary file and use that as the CA path. This is useful
+// on platforms like Render where adding files at build time is inconvenient.
+$db_ssl_cert_env = env('DB_SSL_CERT', '');
+if (empty($db_ssl_ca) && !empty($db_ssl_cert_env)) {
+    $tmpCa = sys_get_temp_dir() . '/aiven-ca.pem';
+    file_put_contents($tmpCa, $db_ssl_cert_env);
+    $db_ssl_ca = $tmpCa;
+}
+
 if ($databaseUrl) {
     $parts = parse_url($databaseUrl);
     if ($parts !== false) {
