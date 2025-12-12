@@ -1,48 +1,56 @@
 <?php
-// db.php – MySQL connection using environment variables (suitable for Render / Aiven)
+/**
+ * db.php – Secure MySQL PDO for Render + Aiven
+ * Auto-creates tables + loads sample products safely.
+ */
 
-// Helper: load env from real env vars first, fallback to .env file if present
+/* ---------------------- ENV LOADER ---------------------- */
 function env($key, $default = null) {
     $val = getenv($key);
     if ($val !== false) return $val;
-    $ini = @parse_ini_file('.env');
-    if ($ini && array_key_exists($key, $ini)) return $ini[$key];
-    return $default;
+
+    static $ini = null;
+    if ($ini === null && file_exists('.env')) {
+        $ini = parse_ini_file('.env');
+    }
+
+    return $ini[$key] ?? $default;
 }
 
-// If a DATABASE_URL is provided (mysql://user:pass@host:port/dbname), parse it
+/* ---------------------- DATABASE CONFIG ---------------------- */
 $databaseUrl = env('DATABASE_URL');
+
 $host = env('DB_HOST', 'localhost');
 $port = env('DB_PORT', '3306');
 $db   = env('DB_NAME', 'ksa_lipa');
 $user = env('DB_USER', 'root');
 $pass = env('DB_PASS', '');
 $charset = 'utf8mb4';
-$db_ssl_mode = env('DB_SSL_MODE', '');
+
+$db_ssl_mode = env('DB_SSL_MODE', 'REQUIRED');
+$db_ssl_cert_env = env('DB_SSL_CERT', '');
 $db_ssl_ca = env('DB_SSL_CA_PATH', '');
 
-// If the CA certificate is provided as an environment variable (DB_SSL_CERT),
-// write it to a temporary file and use that as the CA path. This is useful
-// on platforms like Render where adding files at build time is inconvenient.
-$db_ssl_cert_env = env('DB_SSL_CERT', '');
+/* Render's CA workaround */
 if (empty($db_ssl_ca) && !empty($db_ssl_cert_env)) {
-    $tmpCa = sys_get_temp_dir() . '/aiven-ca.pem';
-    file_put_contents($tmpCa, $db_ssl_cert_env);
-    $db_ssl_ca = $tmpCa;
+    $tmp = sys_get_temp_dir() . '/aiven-ca.pem';
+    file_put_contents($tmp, $db_ssl_cert_env);
+    $db_ssl_ca = $tmp;
 }
 
+/* DATABASE_URL override (Render/Aiven format) */
 if ($databaseUrl) {
-    $parts = parse_url($databaseUrl);
-    if ($parts !== false) {
-        if (!empty($parts['host'])) $host = $parts['host'];
-        if (!empty($parts['port'])) $port = $parts['port'];
-        if (!empty($parts['path'])) $db = ltrim($parts['path'], '/');
-        if (!empty($parts['user'])) $user = $parts['user'];
-        if (!empty($parts['pass'])) $pass = $parts['pass'];
+    $u = parse_url($databaseUrl);
+    if ($u !== false) {
+        $host = $u['host'] ?? $host;
+        $port = $u['port'] ?? $port;
+        $db   = ltrim($u['path'], '/') ?: $db;
+        $user = $u['user'] ?? $user;
+        $pass = $u['pass'] ?? $pass;
     }
 }
 
-// Build DSN using TCP host and port (avoid socket lookup on localhost)
+/* ---------------------- PDO CONNECTION ---------------------- */
 $dsn = "mysql:host={$host};port={$port};dbname={$db};charset={$charset}";
 
 $options = [
@@ -51,7 +59,6 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
-// If SSL CA path is provided and PDO constant exists, set SSL CA option
 if (!empty($db_ssl_ca) && defined('PDO::MYSQL_ATTR_SSL_CA')) {
     $options[PDO::MYSQL_ATTR_SSL_CA] = $db_ssl_ca;
 }
@@ -59,44 +66,46 @@ if (!empty($db_ssl_ca) && defined('PDO::MYSQL_ATTR_SSL_CA')) {
 try {
     $db = new PDO($dsn, $user, $pass, $options);
 } catch (PDOException $e) {
-    // Log full error details for debugging (Render logs capture this)
-    error_log("Database connection failed: " . $e->getMessage());
-    // Show generic message to user and include the connection hint
+    error_log("[DB ERROR] ".$e->getMessage());
     http_response_code(500);
-    die("Database connection failed. Please contact support.\nService URI\n    " . ($databaseUrl ?: "mysql://{$user}:****@{$host}:{$port}/{$db}"));
+    die("Database connection failed.");
 }
 
-// Customers & Payments (existing)
-$db->exec("CREATE TABLE IF NOT EXISTS customers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    phone VARCHAR(15) UNIQUE NOT NULL,
-    total_paid DECIMAL(10,2) DEFAULT 0.00,
-    target_amount DECIMAL(10,2) DEFAULT 3500.00,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)");
+/* ---------------------- TABLE CREATION ---------------------- */
+$db->exec("
+    CREATE TABLE IF NOT EXISTS customers (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        phone VARCHAR(15) UNIQUE NOT NULL,
+        total_paid DECIMAL(10,2) DEFAULT 0.00,
+        target_amount DECIMAL(10,2) DEFAULT 3500.00,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+");
 
-$db->exec("CREATE TABLE IF NOT EXISTS payments (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    phone VARCHAR(15) NOT NULL,
-    amount DECIMAL(10,2) NOT NULL,
-    receipt VARCHAR(50),
-    paid_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)");
+$db->exec("
+    CREATE TABLE IF NOT EXISTS payments (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        phone VARCHAR(15) NOT NULL,
+        amount DECIMAL(10,2) NOT NULL,
+        receipt VARCHAR(50),
+        paid_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+");
 
-// New: Products table (auto-populate with sample Scout items)
-$db->exec("CREATE TABLE IF NOT EXISTS products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
-    price DECIMAL(10,2) NOT NULL,
-    category ENUM('Uniforms', 'Badges', 'Essentials') DEFAULT 'Uniforms',
-    image VARCHAR(100) DEFAULT 'placeholder.jpg',  -- Add real images later
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)");
+$db->exec("
+    CREATE TABLE IF NOT EXISTS products (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        description TEXT,
+        price DECIMAL(10,2) NOT NULL,
+        category ENUM('Uniforms', 'Badges', 'Essentials') DEFAULT 'Uniforms',
+        image VARCHAR(100) DEFAULT 'placeholder.jpg',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+");
 
-// Insert sample products (inspired by UK Scout Store – adapted for KSA)
-$stmt = $db->prepare("INSERT IGNORE INTO products (name, description, price, category) VALUES (?, ?, ?, ?)");
-$products = [
+/* ---------------------- SAFE SAMPLE PRODUCTS ---------------------- */
+$sampleProducts = [
     ['Scout Uniform Shirt', 'Official long-sleeve shirt with KSA badge. 100% cotton.', 1500.00, 'Uniforms'],
     ['Scout Neckerchief', 'Triangular scarf in green for all ranks.', 300.00, 'Uniforms'],
     ['Cubs 110th Anniversary Badge', 'Commemorative badge for Cubs milestone.', 100.00, 'Badges'],
@@ -106,9 +115,20 @@ $products = [
     ['Rechargeable Hand Warmers', 'Dual-palm warmers for night hikes.', 2500.00, 'Essentials'],
     ['Thermal Insulated Mug', 'One-touch mug for hot chai on treks.', 1500.00, 'Essentials'],
     ['Triple Badge Set', 'Set of three birthday/activity badges.', 250.00, 'Badges'],
-    ['Scout Bobble Hat Kids', 'Fun bobble hat with FDL emblem for juniors.', 700.00, 'Uniforms']
+    ['Scout Bobble Hat Kids', 'Fun bobble hat with FDL emblem for juniors.', 700.00, 'Uniforms'],
 ];
-foreach ($products as $p) {
-    $stmt->execute($p);
+
+$check = $db->prepare("SELECT COUNT(*) FROM products WHERE name = ?");
+$insert = $db->prepare("
+    INSERT INTO products (name, description, price, category) 
+    VALUES (?, ?, ?, ?)
+");
+
+/* Prevent duplicate product loading */
+foreach ($sampleProducts as $p) {
+    $check->execute([$p[0]]);
+    if ($check->fetchColumn() == 0) {
+        $insert->execute($p);
+    }
 }
 ?>
